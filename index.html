@@ -1,47 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Z Craft — infinite crafting + Minesweeper</title>
-<style>
-  :root{
-    --bg:#0f1724; --panel:#0b1220; --accent:#2dd4bf; --muted:#94a3b8; --glass: rgba(255,255,255,0.02);
-    --card:#0b1320;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071124 0%, #082033 60%);color:#e6eef6;}
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);border-bottom:1px solid rgba(255,255,255,0.02)}
-  .brand{font-weight:700;letter-spacing:1px;font-size:18px}
-  .status{display:flex;gap:12px;align-items:center}
-  .cash{background:var(--glass);padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:8px}
-  .username{font-size:14px;color:var(--muted)}
-  .container{display:grid;grid-template-columns:240px 1fr 260px;gap:12px;padding:16px;height:calc(100vh - 64px);box-sizing:border-box}
-  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
-  .left .starter{display:flex;flex-wrap:wrap;gap:8px}
-  .item{padding:8px 10px;border-radius:8px;background:var(--card);border:1px solid rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;gap:8px}
-  .item.selected{outline:2px solid var(--accent);transform:scale(1.02)}
-  .inventory{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-  .center .craft-area{min-height:240px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:10px;padding:12px}
-  .hint{color:var(--muted);font-size:13px;margin-top:8px}
-  .shop .shop-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:rgba(255,255,255,0.015);margin-bottom:8px}
-  .btn{background:linear-gradient(90deg,var(--accent),#60a5fa);padding:8px 10px;border-radius:8px;border:none;color:#021;cursor:pointer;font-weight:700}
-  .small{font-size:13px;padding:6px 8px}
-  .message{margin-top:10px;color:#bce; font-weight:600}
-  .minewrap{margin-top:12px}
-  .difficulty{display:flex;gap:6px;flex-wrap:wrap}
-  .grid{display:inline-grid;background:var(--panel);padding:6px;border-radius:8px;margin-top:8px}
-  .cell{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);margin:3px;border-radius:4px;cursor:pointer;user-select:none;font-weight:700}
-  .cell.revealed{background:rgba(255,255,255,0.03);cursor:default}
-  .cell.bomb{background:#7f1d1d}
-  .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
-  .footer{padding:12px;color:var(--muted);font-size:13px;text-align:center}
-  /* overlays */
-  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4));z-index:9999}
-  .modal{background:#06121b;padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-width:320px}
-  input[type="text"]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;width:100%}
-  .smallmuted{color:var(--muted);font-size:13px}
-  @media(max-width:980px){.container{grid-template-columns:1fr;grid-auto-rows:auto;height:auto}.shop{order:3}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Z Craft — Multi-file (GitHub Pages)</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="topbar">
@@ -49,7 +12,7 @@
     <div class="status">
       <div class="username" id="usernameDisplay">Welcome</div>
       <div class="cash" title="Cash">
-        <div style="font-weight:800">💵 <span id="cashAmount">0</span></div>
+        💵 <span id="cashAmount">0</span>
       </div>
     </div>
   </div>
@@ -72,26 +35,26 @@
       <h3>Crafting Area</h3>
       <div class="craft-area" id="craftArea">
         <div class="hint">Select items on the left or in your inventory. Recipes are combinational (order doesn't matter).</div>
-        <div id="selectedList" style="margin-top:10px"></div>
-        <div id="craftedLog" style="margin-top:12px;color:var(--muted);font-size:13px"></div>
+        <div id="selectedList" class="selectedList"></div>
+        <div id="craftedLog" class="craftedLog"></div>
       </div>
 
       <!-- Minesweeper -->
       <div class="minewrap">
         <h3 style="margin-top:14px">Minesweeper</h3>
         <div class="difficulty">
-          <button class="btn small" onclick="startMines('easy')">Easy</button>
-          <button class="btn small" onclick="startMines('normal')">Normal</button>
-          <button class="btn small" onclick="startMines('hard')">Hard</button>
-          <button class="btn small" onclick="startMines('veryhard')">Very Hard (cost 5)</button>
-          <button class="btn small" onclick="startMines('insane')">Insane (cost 10)</button>
+          <button class="btn small" data-diff="easy">Easy</button>
+          <button class="btn small" data-diff="normal">Normal</button>
+          <button class="btn small" data-diff="hard">Hard</button>
+          <button class="btn small" data-diff="veryhard">Very Hard (5)</button>
+          <button class="btn small" data-diff="insane">Insane (10)</button>
         </div>
         <div class="controls">
           <div class="smallmuted">Left click reveal • Right click flag</div>
-          <div style="margin-left:auto"><button class="small" onclick="resetMines()">Reset</button></div>
+          <div style="margin-left:auto"><button class="small" id="resetMineBtn">Reset</button></div>
         </div>
-        <div id="mineInfo" style="margin-top:8px;color:var(--muted)"></div>
-        <div id="minefield" style="margin-top:8px"></div>
+        <div id="mineInfo" class="smallmuted"></div>
+        <div id="minefield"></div>
       </div>
     </div>
 
@@ -100,478 +63,48 @@
       <h3>Shop</h3>
       <div class="shop-item">
         <div>
-          <div style="font-weight:700">🍫 Chocolate</div>
-          <div class="smallmuted">Use to craft Chocolate Factory / Willy Wonka (needs a random item)</div>
+          <div class="shop-title">🍫 Chocolate</div>
+          <div class="smallmuted">Buy to unlock Chocolate Factory / Willy Wonka crafting (needs a random owned item)</div>
         </div>
-        <div>
-          <button class="btn small" onclick="buy('Chocolate',20)">Buy 20</button>
-        </div>
+        <div><button class="btn small" onclick="Game.buy('Chocolate',20)">Buy 20</button></div>
       </div>
 
       <div class="shop-item">
         <div>
-          <div style="font-weight:700">🏖️ Sand</div>
-          <div class="smallmuted">Use to craft Beach (Sand + random owned item)</div>
+          <div class="shop-title">🏖️ Sand</div>
+          <div class="smallmuted">Buy to craft Beach together with a random owned item</div>
         </div>
-        <div>
-          <button class="btn small" onclick="buy('Sand',10)">Buy 10</button>
-        </div>
+        <div><button class="btn small" onclick="Game.buy('Sand',10)">Buy 10</button></div>
       </div>
 
-      <div style="margin-top:12px;color:var(--muted);font-size:13px">
-        <strong>Craft notes:</strong>
-        <ul style="padding-left:18px;margin:6px 0">
-          <li>Most successful crafts give +5 cash.</li>
-          <li>Chocolate/Sand recipes use one owned item + chocolate/sand (random partner).</li>
+      <div class="shop-notes">
+        <strong>Notes</strong>
+        <ul>
+          <li>Every successful craft gives <strong>+5 cash</strong>.</li>
+          <li>Chocolate & Sand recipes require you to own that shop item and another owned item (random partner).</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="footer">Made for GitHub Pages — drop this file in index.html and enable Pages. Progress stored locally in your browser.</div>
+  <div class="footer">Drop these files into a GitHub repo and enable GitHub Pages (main branch → /root).</div>
 
-  <!-- overlays: username & cookie consent -->
-  <div id="overlay" class="overlay" style="display:none">
+  <!-- overlays -->
+  <div id="overlay" class="overlay hidden">
     <div class="modal">
       <h3>Welcome to Z Craft ✨</h3>
-      <div class="smallmuted">Enter a username to get started (saved to your browser). Cookies/localStorage used to keep progress safe.</div>
+      <div class="smallmuted">Enter a username to get started (saved locally). Cookies/localStorage used to keep progress safe.</div>
       <div style="margin-top:10px">
         <input type="text" id="usernameInput" placeholder="Type a username..." />
       </div>
       <div style="display:flex;gap:8px;margin-top:12px">
-        <button class="btn" onclick="saveUsername()">Start</button>
-        <button class="small" onclick="decline()">Decline</button>
+        <button class="btn" id="startBtn">Start</button>
+        <button class="small" id="guestBtn">Play as Guest</button>
       </div>
     </div>
   </div>
 
-  <div id="cookieOverlay" class="overlay" style="display:none">
-    <div class="modal">
-      <h3>Cookie & Data</h3>
-      <div class="smallmuted">Z Craft stores your username, cash and inventory locally in your browser to keep progress. Accept to continue.</div>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button class="btn" onclick="acceptCookies()">Accept</button>
-        <button class="small" onclick="declineCookies()">Decline</button>
-      </div>
-    </div>
-  </div>
-
-<script>
-/* ========= Data model ========= */
-const STARTERS = [
-  {id:'Earth',emoji:'🌍'},
-  {id:'Water',emoji:'💧'},
-  {id:'Wind',emoji:'🌬️'},
-  {id:'Light',emoji:'💡'},
-  {id:'Fire',emoji:'🔥'},
-];
-
-// recipes: key is sorted names joined by '+'
-const RECIPES = {
-  'Cloud+Water': {id:'Rain',emoji:'🌧️',desc:'Cloud + Water → Rain'},
-};
-
-// We'll build many recipes programmatically below.
-function key(a,b){ return [a,b].sort().join('+'); }
-const REC = {}; // recipe map
-
-function add(a,b,out,desc){
-  REC[key(a,b)] = {id:out.id||out,emoji:out.emoji||out,desc:desc||(`${a} + ${b} → ${out}`)};
-}
-
-/* Core recipes (covers items requested) */
-add('Water','Wind',{id:'Cloud',emoji:'☁️'});
-add('Cloud','Water',{id:'Rain',emoji:'🌧️'});
-add('Fire','Earth',{id:'Lava',emoji:'🌋'});
-// Stone from Earth + Earth
-add('Earth','Earth',{id:'Stone',emoji:'🪨'});
-add('Earth','Water',{id:'Swamp',emoji:'🟩'});
-add('Water','Light',{id:'Life',emoji:'🌱'});
-add('Wind','Light',{id:'Atmosphere',emoji:'🌫️'});
-add('Light','Earth',{id:'Aura',emoji:'✨'});
-add('Wind','Cloud',{id:'Thunder',emoji:'⚡'});
-add('Fire','Wind',{id:'Smoke',emoji:'💨'});
-add('Swamp','Life',{id:'Crocodile',emoji:'🐊'});
-add('Life','Earth',{id:'Human',emoji:'🧑'});
-add('Human','Crocodile',{id:'Crocs',emoji:'👞'});
-add('Stone','Fire',{id:'Metal',emoji:'🛠️'});
-add('Stone','Water',{id:'Boat',emoji:'🛶'});
-add('Boat','Metal',{id:'Ship',emoji:'🚢'});
-add('Human','Stone',{id:'House',emoji:'🏠'});
-add('House','House',{id:'Village',emoji:'🏘️'});
-add('Village','Technology',{id:'City',emoji:'🏙️'});
-add('Light','Metal',{id:'Lamp',emoji:'🪔'});
-add('Metal','Light',{id:'Phone',emoji:'📱'});
-add('Phone','Metal',{id:'Tablet',emoji:'📲'});
-add('Technology','Human',{id:'Social Media',emoji:'🌐'});
-add('Social Media','Technology',{id:'YouTube Channel',emoji:'▶️'});
-add('YouTube Channel','Human',{id:'Z Guy Channel',emoji:'🧑‍💻'});
-add('Metal','Technology',{id:'Factory',emoji:'🏭'});
-add('Factory','Chocolate',{id:'Chocolate Factory',emoji:'🍫🏭'});
-add('Chocolate','Factory',{id:'Willy Wonka',emoji:'🍫👨‍🍳'});
-add('Sand','Water',{id:'Beach',emoji:'🏖️'});
-
-/* Fallback extras: Technology from Metal+Light */
-add('Metal','Light',{id:'Technology',emoji:'🖥️'});
-
-/* Ensure duplicates don't override critical recipes above */
-
-
-/* ========= persistence ========= */
-const LS_KEY = 'zcraft_v1';
-let state = {
-  username: null,
-  cash: 0,
-  inventory: {}, // id -> count
-  selected: [], // selected item ids (max 2)
-};
-function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); updateUI(); }
-function loadState(){
-  const s = localStorage.getItem(LS_KEY);
-  if(s){ Object.assign(state, JSON.parse(s)); }
-}
-loadState();
-
-/* ========= UI helpers ========= */
-const startersEl = document.getElementById('starters');
-const inventoryEl = document.getElementById('inventory');
-const messageEl = document.getElementById('message');
-const cashEl = document.getElementById('cashAmount');
-const usernameDisplay = document.getElementById('usernameDisplay');
-const selectedList = document.getElementById('selectedList');
-const craftedLog = document.getElementById('craftedLog');
-
-function updateUI(){
-  // username
-  usernameDisplay.textContent = state.username ? state.username : 'Guest';
-  // cash
-  cashEl.textContent = state.cash;
-  // starters
-  startersEl.innerHTML = '';
-  STARTERS.forEach(s => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.innerHTML = `${s.emoji} <strong>${s.id}</strong>`;
-    div.onclick = ()=>selectItem(s.id);
-    startersEl.appendChild(div);
-  });
-  // inventory
-  inventoryEl.innerHTML = '';
-  const keys = Object.keys(state.inventory);
-  if(keys.length===0) inventoryEl.innerHTML = '<div class="smallmuted">No items yet — craft something!</div>';
-  keys.forEach(k=>{
-    const c = state.inventory[k];
-    if(c<=0) return;
-    const itm = getItemInfo(k);
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.id = 'inv-'+k;
-    div.innerHTML = `${itm.emoji} <strong>${k}</strong> <span style="opacity:0.7;margin-left:8px">x${c}</span>`;
-    div.onclick = ()=>selectItem(k);
-    inventoryEl.appendChild(div);
-  });
-
-  // selected display
-  selectedList.innerHTML = '';
-  state.selected.forEach((s, idx)=>{
-    const itm = getItemInfo(s);
-    const b = document.createElement('div');
-    b.className = 'item selected';
-    b.style.display='inline-flex';
-    b.style.marginRight='8px';
-    b.innerHTML = `${itm.emoji} <strong>${s}</strong> <button style="margin-left:8px" onclick="deselect(${idx})">✖</button>`;
-    selectedList.appendChild(b);
-  });
-
-  // message clear after few seconds
-  setTimeout(()=>{ messageEl.textContent=''; }, 3000);
-  cashEl.textContent = state.cash;
-  saveState();
-}
-
-function getItemInfo(id){
-  // check starters
-  const s = STARTERS.find(x=>x.id===id);
-  if(s) return s;
-  // recipe map might have emoji — try find in REC values
-  for(const k in REC){ if(REC[k].id === id) return {id:id, emoji:REC[k].emoji}; }
-  // shop items:
-  if(id==='Chocolate') return {id:'Chocolate',emoji:'🍫'};
-  if(id==='Sand') return {id:'Sand',emoji:'🏖️'};
-  // fallback
-  return {id:id,emoji:'❓'};
-}
-
-/* ========= selection & crafting ========= */
-function selectItem(id){
-  if(state.selected.length>=2){ state.selected = []; }
-  state.selected.push(id);
-  if(state.selected.length===2){
-    attemptCraft(state.selected[0], state.selected[1]);
-    state.selected = [];
-  }
-  updateUI();
-}
-function deselect(idx){ state.selected.splice(idx,1); updateUI(); }
-
-function attemptCraft(a,b){
-  // check if player owns a and b when selecting inventory (starters allowed without owning)
-  // We assume if item is in inventory it has count > 0 OR it's a starter.
-  // Allow crafting even if they don't "own" starters.
-  const recipe = REC[key(a,b)];
-  if(recipe){
-    // add item to inventory
-    addToInventory(recipe.id,1);
-    addCash(5);
-    appendLog(`Crafted ${recipe.emoji} ${recipe.id} (+5 cash)`);
-  } else {
-    // special cases: chocolate/sand random recipes if proper conditions
-    if((a==='Chocolate' || b==='Chocolate') && (state.inventory['Chocolate']>0 || a==='Chocolate' || b==='Chocolate')){
-      // require at least one chocolate in inventory (or purchased)
-      if(state.inventory['Chocolate']>0){
-        // pick a random other owned item (exclude Chocolate)
-        const pool = Object.keys(state.inventory).filter(x=>x!=='Chocolate' && state.inventory[x]>0);
-        if(pool.length===0){ messageEl.textContent = 'Need another owned item to combine with Chocolate.'; return; }
-        const rand = pool[Math.floor(Math.random()*pool.length)];
-        // produce Chocolate Factory or Willy Wonka (random)
-        const result = Math.random() < 0.5 ? {id:'Chocolate Factory',emoji:'🍫🏭'} : {id:'Willy Wonka',emoji:'🍫👨‍🍳'};
-        addToInventory(result.id,1); addCash(5); appendLog(`Crafted ${result.emoji} ${result.id} (+5 cash)`);
-        return;
-      } else {
-        messageEl.textContent = 'You need to buy Chocolate from the shop first.';
-        return;
-      }
-    }
-    if((a==='Sand' || b==='Sand') && (state.inventory['Sand']>0 || a==='Sand' || b==='Sand')){
-      if(state.inventory['Sand']>0){
-        const pool = Object.keys(state.inventory).filter(x=>x!=='Sand' && state.inventory[x]>0);
-        if(pool.length===0){ messageEl.textContent = 'Need another owned item to combine with Sand.'; return; }
-        const rand = pool[Math.floor(Math.random()*pool.length)];
-        const result = {id:'Beach',emoji:'🏖️'};
-        addToInventory(result.id,1); addCash(5); appendLog(`Crafted ${result.emoji} ${result.id} (+5 cash)`);
-        return;
-      } else {
-        messageEl.textContent = 'You need to buy Sand from the shop first.';
-        return;
-      }
-    }
-
-    messageEl.textContent = `No recipe for ${a} + ${b}. Try other combinations.`;
-  }
-  updateUI();
-}
-
-function addToInventory(id,amount=1){
-  state.inventory[id] = (state.inventory[id]||0) + amount;
-  saveState();
-}
-function addCash(n){ state.cash += n; saveState(); }
-function spendCash(n){
-  if(state.cash < n) return false;
-  state.cash -= n; saveState(); return true;
-}
-function appendLog(text){
-  const now = new Date().toLocaleTimeString();
-  craftedLog.innerHTML = `[${now}] ${text}<br/>` + craftedLog.innerHTML;
-}
-
-/* ========= shop actions ========= */
-function buy(item,price){
-  if(!spendCash(price)){ messageEl.textContent = 'Not enough cash.'; return; }
-  addToInventory(item,1);
-  appendLog(`Bought ${item} (-${price} cash)`);
-  updateUI();
-}
-
-/* ========= username & cookie handling ========= */
-const overlay = document.getElementById('overlay');
-const cookieOverlay = document.getElementById('cookieOverlay');
-
-function showStartup(){
-  // if username present and cookies accepted, just proceed
-  const accepted = localStorage.getItem('zcraft_cookies_accepted');
-  if(!state.username){
-    overlay.style.display='flex';
-    cookieOverlay.style.display='none';
-  } else if(!accepted){
-    cookieOverlay.style.display='flex';
-  } else {
-    overlay.style.display='none';
-    cookieOverlay.style.display='none';
-    updateUI();
-  }
-}
-function saveUsername(){
-  const v = document.getElementById('usernameInput').value.trim();
-  if(!v){ alert('Please enter a username'); return; }
-  state.username = v;
-  localStorage.setItem('zcraft_cookies_accepted','true');
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
-  overlay.style.display='none';
-  cookieOverlay.style.display='none';
-  updateUI();
-}
-function decline(){ alert('You can still play as Guest, but your progress won’t be saved.'); overlay.style.display='none'; }
-function acceptCookies(){ localStorage.setItem('zcraft_cookies_accepted','true'); cookieOverlay.style.display='none'; updateUI(); }
-function declineCookies(){ alert('Cookies are required to save progress. You can still play but progress won’t persist.'); cookieOverlay.style.display='none'; overlay.style.display='none'; }
-
-/* show startup */
-setTimeout(showStartup,200);
-
-/* ========= Minesweeper ========= */
-let minesState = null;
-
-function startMines(level){
-  const cfg = {
-    easy:{w:8,h:8,b:10,cost:0,reward:2},
-    normal:{w:10,h:10,b:18,cost:0,reward:3},
-    hard:{w:12,h:12,b:30,cost:0,reward:5},
-    veryhard:{w:14,h:14,b:45,cost:5,reward:7},
-    insane:{w:16,h:16,b:70,cost:10,reward:10}
-  }[level];
-  if(!cfg) return;
-  if(cfg.cost > 0){
-    if(!confirm(`Start ${level} and pay ${cfg.cost} cash?`)) return;
-    if(!spendCash(cfg.cost)){ messageEl.textContent = 'Not enough cash to start this difficulty.'; return; }
-  }
-  // init field
-  minesState = {
-    w:cfg.w, h:cfg.h, bombs:cfg.b, reward:cfg.reward, board:[], revealed:[], flags: []
-  };
-  // create empty board
-  for(let y=0;y<cfg.h;y++){
-    minesState.board[y]=[];
-    minesState.revealed[y]=[];
-    minesState.flags[y]=[];
-    for(let x=0;x<cfg.w;x++){ minesState.board[y][x]=0; minesState.revealed[y][x]=false; minesState.flags[y][x]=false; }
-  }
-  // place bombs
-  let placed = 0;
-  while(placed < cfg.b){
-    const x = Math.floor(Math.random()*cfg.w);
-    const y = Math.floor(Math.random()*cfg.h);
-    if(minesState.board[y][x] === 'B') continue;
-    minesState.board[y][x] = 'B'; placed++;
-  }
-  // number up
-  for(let y=0;y<cfg.h;y++){
-    for(let x=0;x<cfg.w;x++){
-      if(minesState.board[y][x] === 'B') continue;
-      let count = 0;
-      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
-        const nx=x+dx, ny=y+dy;
-        if(nx>=0 && nx<cfg.w && ny>=0 && ny<cfg.h && minesState.board[ny][nx]==='B') count++;
-      }
-      minesState.board[y][x]=count;
-    }
-  }
-  renderMinefield();
-  document.getElementById('mineInfo').textContent = `Difficulty ${level.toUpperCase()} — bombs: ${cfg.b} • reward on win: ${cfg.reward} cash`;
-}
-
-function resetMines(){ minesState=null; document.getElementById('minefield').innerHTML=''; document.getElementById('mineInfo').textContent=''; }
-
-function renderMinefield(){
-  const mf = document.getElementById('minefield');
-  mf.innerHTML='';
-  if(!minesState) return;
-  const grid = document.createElement('div');
-  grid.className='grid';
-  grid.style.gridTemplateColumns = `repeat(${minesState.w}, auto)`;
-  // adjust cell size if too big
-  const cellSize = (minesState.w>12) ? 24 : 28;
-  grid.querySelectorAll;
-  for(let y=0;y<minesState.h;y++){
-    for(let x=0;x<minesState.w;x++){
-      const cell = document.createElement('div');
-      cell.className='cell';
-      cell.style.width = cell.style.height = cellSize+'px';
-      cell.dataset.x = x; cell.dataset.y = y;
-      if(minesState.revealed[y][x]) cell.classList.add('revealed');
-      if(minesState.flags[y][x]) cell.textContent = '🚩';
-      if(minesState.revealed[y][x]){
-        const val = minesState.board[y][x];
-        if(val==='B'){ cell.textContent='💣'; cell.classList.add('bomb'); }
-        else if(val>0) cell.textContent = val;
-      }
-      cell.oncontextmenu = (e)=>{ e.preventDefault(); toggleFlag(x,y); return false; };
-      cell.onclick = ()=>revealCell(x,y);
-      grid.appendChild(cell);
-    }
-  }
-  mf.appendChild(grid);
-}
-
-function toggleFlag(x,y){
-  if(!minesState || minesState.revealed[y][x]) return;
-  minesState.flags[y][x] = !minesState.flags[y][x];
-  renderMinefield();
-}
-
-function revealCell(x,y){
-  if(!minesState) return;
-  if(minesState.flags[y][x] || minesState.revealed[y][x]) return;
-  if(minesState.board[y][x] === 'B'){
-    // game over
-    // reveal all bombs
-    for(let yy=0;yy<minesState.h;yy++) for(let xx=0;xx<minesState.w;xx++){
-      if(minesState.board[yy][xx]==='B') minesState.revealed[yy][xx]=true;
-    }
-    renderMinefield();
-    messageEl.textContent = 'BOOM — you hit a bomb!';
-    minesState = null;
-    return;
-  }
-  floodReveal(x,y);
-  renderMinefield();
-  checkWin();
-}
-
-function floodReveal(x,y){
-  const w=minesState.w,h=minesState.h;
-  if(x<0||x>=w||y<0||y>=h) return;
-  if(minesState.revealed[y][x]) return;
-  minesState.revealed[y][x]=true;
-  if(minesState.board[y][x]===0){
-    for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
-      const nx=x+dx, ny=y+dy;
-      if(nx>=0 && nx<w && ny>=0 && ny<h) floodReveal(nx,ny);
-    }
-  }
-}
-
-function checkWin(){
-  let unrevealed=0;
-  for(let y=0;y<minesState.h;y++) for(let x=0;x<minesState.w;x++){
-    if(!minesState.revealed[y][x]) unrevealed++;
-  }
-  // player wins when only bombs remain unrevealed
-  if(unrevealed === minesState.bombs){
-    addCash(minesState.reward);
-    appendLog(`Minesweeper win +${minesState.reward} cash!`);
-    alert(`You won! +${minesState.reward} cash awarded.`);
-    minesState = null;
-    renderMinefield();
-  }
-}
-
-/* initial items for quick play: put starters in inventory so they appear there */
-STARTERS.forEach(s => { /* don't auto-add to inventory: starters are selectable independently */ });
-
-/* If previous inventory present keep it */
-
-updateUI();
-
-/* Make some helpful global functions reachable for inline onclicks */
-window.buy = buy;
-window.startMines = startMines;
-window.resetMines = resetMines;
-window.selectItem = selectItem;
-window.deselect = deselect;
-window.saveUsername = saveUsername;
-window.acceptCookies = acceptCookies;
-window.declineCookies = declineCookies;
-window.decline = decline;
-</script>
+  <script src="minesweeper.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
